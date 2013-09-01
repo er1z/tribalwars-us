@@ -5,6 +5,7 @@
 // @description  adjusts default transport values to satisfy transport time and current village capacity
 // @include      http://*.plemiona.pl/*
 // @include		http://*.tribalwars*/*
+// @location     https://raw.github.com/er1z/tribalwars-us/master/market-adjust.js
 // @grant none
 // @copyright  2013+, eRIZ
 // ==/UserScript==
@@ -38,19 +39,19 @@ CallResources.toggle = function(){
         var vil = window.game_data.village.res;
         var result = {
             wood: {
-                value: vil.res[0],
+                value: vil[0],
                 full: $('#wood').hasClass('warn'),
-                prod: vil.res[1]
+                prod: vil[1]
             },
             stone: {
-                value: vil.res[2],
+                value: vil[2],
                 full: $('#stone').hasClass('warn'),
-                prod: vil.res[3]
+                prod: vil[3]
             },
             iron: {
-                value: vil.res[4],
+                value: vil[4],
                 full: $('#iron').hasClass('warn'),
-                prod: vil.res[4]
+                prod: vil[4]
             }        
         };
         return result;
@@ -59,21 +60,53 @@ CallResources.toggle = function(){
     var rowValues = {
         wood: {
             handle: row.find('input[name=wood]'),
-            max: Math.floor(row.find('td.wood').data('res')/1000)*1000
+            max: Math.floor(row.find('td.wood').data('res')/1000)*1000,
+            enabled: $('#checkbox_wood').is(':checked')
         },
         stone: {
             handle: row.find('input[name=stone]'),
-            max: Math.floor(row.find('td.stone').data('res')/1000)*1000
+            max: Math.floor(row.find('td.stone').data('res')/1000)*1000,
+            enabled: $('#checkbox_stone').is(':checked')
         },
         iron: {
             handle: row.find('input[name=iron]'),
-            max: Math.floor(row.find('td.iron').data('res')/1000)*1000
+            max: Math.floor(row.find('td.iron').data('res')/1000)*1000,
+            enabled: $('#checkbox_iron').is(':checked')
         }
     };
     
-    var transportTime = hmsToSecondsOnly(row.find('td:eq(1)').text());
+    var storageCapacity = window.game_data.village.res[6];
     
-    alert(transportTime);
+    var transportTime = hmsToSecondsOnly(row.find('td:eq(1)').text());
+    var values = _getCurrentResources();
+    var capacityLeft = maxTransportCapacity;
+    
+    var checkboxes = rowValues.wood.enabled+rowValues.stone.enabled+rowValues.iron.enabled;
+    var perTrader = Math.floor(maxTransportCapacity/checkboxes/1000)*1000;
+    
+    var left = 0;
+    
+    //todo: time-aware storage status
+    
+    for(var i in rowValues){
+    	var amount = left+perTrader;
+        
+        if(rowValues[i].enabled){
+        	var computedAmount = Math.floor((storageCapacity-values[i].value)/1000)*1000;
+        
+        	var amount = Math.min(amount, computedAmount);
+            amount = Math.min(amount, rowValues[i].max);
+            
+        	left = perTrader-amount;
+            rowValues[i].handle.val(amount);
+        }else{
+            rowValues[i].handle.val(0);
+            left = amount;
+        }
+        
+        
+    }
+    
 }
 
 btn.click(CallResources.toggle);
