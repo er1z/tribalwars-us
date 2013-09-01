@@ -88,8 +88,8 @@ CallResources.toggle = function(){
     
     //todo: time-aware storage status
     //todo: regard all incoming transports above (sum storage + incoming)
-    //todo: url filtering
     
+    var focused = false;
     for(var i in rowValues){
     	var amount = left+perTrader;
         
@@ -106,8 +106,13 @@ CallResources.toggle = function(){
             left = amount;
         }
         
-        
+        if(!focused && rowValues[i].enabled){
+            focused = true;
+            rowValues[i].handle.focus();
+        }
     }
+    
+    
     
 }
 
