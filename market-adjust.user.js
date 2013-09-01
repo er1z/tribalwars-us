@@ -5,7 +5,7 @@
 // @description  adjusts default transport values to satisfy transport time and current village capacity
 // @include      http://*.plemiona.pl/*
 // @include		http://*.tribalwars*/*
-// @location     https://raw.github.com/er1z/tribalwars-us/master/market-adjust.js
+// @location     https://raw.github.com/er1z/tribalwars-us/master/market-adjust.user.js
 // @grant none
 // @copyright  2013+, eRIZ
 // ==/UserScript==
