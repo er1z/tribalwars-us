@@ -89,6 +89,29 @@ CallResources.toggle = function(){
     //todo: time-aware storage status
     //todo: regard all incoming transports above (sum storage + incoming)
     
+    var upDown = function(e){
+    	
+        var current = parseInt($(this).val());
+        var max = $(this).data('max');
+        
+        if(e.keyCode == 38){
+            // increase by 1k
+            
+			e.preventDefault();
+            if(current+1000<=max){
+                $(this).val(current+1000);
+            }
+            
+        }else if(e.keyCode == 40){
+            // decrease by 1k
+            
+            e.preventDefault();
+            if(current-1000>=0){
+                $(this).val(current-1000);
+            }
+        }
+    }
+    
     var focused = false;
     for(var i in rowValues){
     	var amount = left+perTrader;
@@ -100,11 +123,13 @@ CallResources.toggle = function(){
             amount = Math.min(amount, rowValues[i].max);
             
         	left = perTrader-amount;
-            rowValues[i].handle.val(amount);
+            rowValues[i].handle.val(amount).data('max', amount);
         }else{
-            rowValues[i].handle.val(0);
+            rowValues[i].handle.val(0).data('max', 0);
             left = amount;
         }
+        
+        rowValues[i].handle.keydown(upDown);
         
         if(!focused && rowValues[i].enabled){
             focused = true;
