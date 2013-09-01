@@ -3,8 +3,8 @@
 // @namespace  http://github.com/er1z/plemiona-us
 // @version    0.1
 // @description  adjusts default transport values to satisfy transport time and current village capacity
-// @include      http://*.plemiona.pl/*mode=call
-// @include		http://*.tribalwars*/*mode=call
+// @include      http://*.plemiona.pl/*mode=call*
+// @include		http://*.tribalwars*/*mode=call*
 // @location     https://raw.github.com/er1z/tribalwars-us/master/market-adjust.js
 // @grant none
 // @copyright  2013+, eRIZ
