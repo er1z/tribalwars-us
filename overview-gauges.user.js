@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       TribalWars - resources usage gauges on overview
 // @namespace  http://github.com/er1z/plemiona-us
-// @version    0.1
+// @version    0.1.1
 // @description  shows visual gauges on resources list
 // @include      http://*.plemiona.pl/game.php*
 // @include		http://*.tribalwars*/game.php*
@@ -26,7 +26,7 @@ function addGlobalStyle(css) {
 }
 
 
-var handle = $('.menu_block_right table.box').css({position: 'relative', 'z-index': 1});
+var handle = $('.menu_block_right table.box:first').css({position: 'relative', 'z-index': 1});
 handle.wrap('<div id="resourceGauges"></div>');
 
 var tds = handle.find('.box-item');
