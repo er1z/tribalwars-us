@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       TribalWars - resources usage gauges on overview
 // @namespace  http://github.com/er1z/plemiona-us
-// @version    0.1.3
+// @version    0.2
 // @description  shows visual gauges on resources list
 // @include      http://*.plemiona.pl/game.php*
 // @include		http://*.tribalwars*/game.php*
@@ -12,7 +12,7 @@
 
 // LICENSE: CC: BY-NC-SA
 
-//todo:farm gauge
+//todo:refactor to DRY
 
 function addGlobalStyle(css) {
     var head, style;
@@ -32,11 +32,15 @@ var tds = handle.find('.box-item');
 
 var gaugeContainer = $('#resourceGauges');
 
+var moveBackground = function($src, $dst){
+    var bg = $src.css('background');
+	$src.css('background', 'none');
+	$dst.css('background', bg);
+}
+
 // move background image to another node
 var firstItem = tds.filter('.firstcell');
-var bg = firstItem.css('background');
-firstItem.css('background', 'none');
-gaugeContainer.css('background', bg);
+moveBackground(firstItem, gaugeContainer);
 
 var res = {
     wood: gaugeContainer.append('<div id="gaugeWood"><span></span></div>').find('#gaugeWood'),
@@ -79,7 +83,16 @@ var update = function(){
 setInterval(update,1000);
 update();
 
-addGlobalStyle('#resourceGauges div > span{'+
+var farmHandle = $('.menu_block_right table.box:eq(1)').css({position: 'relative', 'z-index': 1});
+farmHandle.wrap('<div id="farmGauge"></div>');
+
+moveBackground(farmHandle.find('td:first'), $('#farmGauge'));
+
+var farmGauge = $('#farmGauge').append('<span>').find('> span');
+var data = window.game_data.village.res;
+farmGauge.css('width', ((data[7]/data[8])*100)+'px');
+
+addGlobalStyle('#resourceGauges div > span, #farmGauge > span{'+
                'background: #eeeeee; /* Old browsers */ '+
                'background: -moz-linear-gradient(top, #eeeeee 0%, #ffffff 100%); /* FF3.6+ */'+
                'background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */'+
@@ -94,8 +107,8 @@ addGlobalStyle('#resourceGauges div > span{'+
                'width: 0;'+
                'height: 24px;'+
 '}'+
-               
-               '#resourceGauges { position: relative; }'+
+               '#farmGauge > span { left: 1px; }'+
+               '#resourceGauges, #farmGauge { position: relative; }'+
 
 '#resourceGauges div{'+
 '	position: absolute;'+
