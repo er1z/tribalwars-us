@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       TribalWars - resources usage gauges on overview
 // @namespace  http://github.com/er1z/plemiona-us
-// @version    0.1.2
+// @version    0.1.3
 // @description  shows visual gauges on resources list
 // @include      http://*.plemiona.pl/game.php*
 // @include		http://*.tribalwars*/game.php*
@@ -12,7 +12,6 @@
 
 // LICENSE: CC: BY-NC-SA
 
-//todo:refactor css
 //todo:farm gauge
 
 function addGlobalStyle(css) {
@@ -32,11 +31,8 @@ handle.wrap('<div id="resourceGauges"></div>');
 var tds = handle.find('.box-item');
 
 var gaugeContainer = $('#resourceGauges');
-gaugeContainer.css({
-    position: 'relative'
-});
 
-
+// move background image to another node
 var firstItem = tds.filter('.firstcell');
 var bg = firstItem.css('background');
 firstItem.css('background', 'none');
@@ -48,21 +44,7 @@ var res = {
     iron: gaugeContainer.append('<div id="gaugeIron"><span></span></div>').find('#gaugeIron')
 };
 
-var all = $([res.wood[0], res.stone[0], res.iron[0]]).css({
-    position: 'absolute',
-    top: 0,
-    height: '26px'
-});
-
-all.find('span').css({
-    display: 'block',
-    position: 'absolute',
-    top: 1,
-    bottom: 1,
-    width: 0,
-    //background: '#FFF',
-    height: '24px'
-});
+var all = $([res.wood[0], res.stone[0], res.iron[0]]);
 
 var updateDimensions = function(){
     var offset = 1;
@@ -95,5 +77,28 @@ var update = function(){
 };
 
 setInterval(update,1000);
+update();
 
-addGlobalStyle('#resourceGauges div > span{background: #eeeeee; /* Old browsers */ background: -moz-linear-gradient(top, #eeeeee 0%, #ffffff 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #eeeeee 0%,#ffffff 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #eeeeee 0%,#ffffff 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #eeeeee 0%,#ffffff 100%); /* IE10+ */ background: linear-gradient(to bottom, #eeeeee 0%,#ffffff 100%);}');
+addGlobalStyle('#resourceGauges div > span{'+
+               'background: #eeeeee; /* Old browsers */ '+
+               'background: -moz-linear-gradient(top, #eeeeee 0%, #ffffff 100%); /* FF3.6+ */'+
+               'background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */'+
+               'background: -webkit-linear-gradient(top, #eeeeee 0%,#ffffff 100%); /* Chrome10+,Safari5.1+ */'+
+               'background: -o-linear-gradient(top, #eeeeee 0%,#ffffff 100%); /* Opera 11.10+ */'+
+               'background: -ms-linear-gradient(top, #eeeeee 0%,#ffffff 100%); /* IE10+ */'+
+               'background: linear-gradient(to bottom, #eeeeee 0%,#ffffff 100%);'+
+               'display: block;'+
+    		   'position: absolute;'+
+               'top: 1px;'+
+               'bottom: 1px;'+
+               'width: 0;'+
+               'height: 24px;'+
+'}'+
+               
+               '#resourceGauges { position: relative; }'+
+
+'#resourceGauges div{'+
+'	position: absolute;'+
+'   top: 0;'+
+'   height: 26px;'+
+'}');
