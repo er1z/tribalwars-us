@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       TribalWars - resources usage gauges on overview
 // @namespace  http://github.com/er1z/plemiona-us
-// @version    0.1.1
+// @version    0.1.2
 // @description  shows visual gauges on resources list
 // @include      http://*.plemiona.pl/game.php*
 // @include		http://*.tribalwars*/game.php*
@@ -64,23 +64,27 @@ all.find('span').css({
     height: '24px'
 });
 
-var offset = 1;
-var iteration = 0;
-all.each(function(){
-    
-    var width = tds.eq(iteration).outerWidth()+tds.eq(iteration+1).outerWidth();
-    
-    $(this).css({
-        width: width,
-        left: offset
+var updateDimensions = function(){
+    var offset = 1;
+    var iteration = 0;
+    all.each(function(){
+        
+        var width = tds.eq(iteration).outerWidth()+tds.eq(iteration+1).outerWidth();
+        
+        $(this).css({
+            width: width,
+            left: offset
+        });
+        
+        offset += width;
+        iteration += 2;
     });
+}
     
-    offset += width;
-    iteration += 2;
-});
-
 // update widths
 var update = function(){
+    
+    updateDimensions();
     var idx = 0;
     for(var i in res){
         var percent = (window.game_data.village.res[idx]/parseInt(window.game_data.village.res[6]))*100;
