@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       TribalWars - resources usage gauges on overview
 // @namespace  http://github.com/er1z/plemiona-us
-// @version    0.2
+// @version    0.2.1
 // @description  shows visual gauges on resources list
 // @include      http://*.plemiona.pl/game.php*
 // @include		http://*.tribalwars*/game.php*
@@ -80,6 +80,7 @@ var update = function(){
     }
 };
 
+// todo: override original interval (inject script)
 setInterval(update,1000);
 update();
 
@@ -90,7 +91,11 @@ moveBackground(farmHandle.find('td:first'), $('#farmGauge'));
 
 var farmGauge = $('#farmGauge').append('<span>').find('> span');
 var data = window.game_data.village.res;
-farmGauge.css('width', ((data[7]/data[8])*100)+'px');
+farmGauge.css('width', ((data[7]/data[8])*100)+'%');
+
+$('#farmGauge').wrap('<div></div>');
+
+moveBackground(farmHandle, $('#farmGauge').parent());
 
 addGlobalStyle('#resourceGauges div > span, #farmGauge > span{'+
                'background: #eeeeee; /* Old browsers */ '+
@@ -107,7 +112,7 @@ addGlobalStyle('#resourceGauges div > span, #farmGauge > span{'+
                'width: 0;'+
                'height: 24px;'+
 '}'+
-               '#farmGauge > span { left: 1px; }'+
+               '#farmGauge > span { left: 1px; max-width: 99%; }'+
                '#resourceGauges, #farmGauge { position: relative; }'+
 
 '#resourceGauges div{'+
